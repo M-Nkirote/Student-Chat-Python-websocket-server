@@ -8,8 +8,9 @@ socket_app = socketio.ASGIApp(sio, other_asgi_app=app)
 
 
 @sio.on("connect")
-async def connect(sid, environ):
+async def connect(sid, environ, auth):
     print("Client connected:", sid)
+    return True
 
 
 @sio.on("disconnect")
@@ -20,5 +21,13 @@ async def disconnect(sid):
 @sio.on("send_prompt")
 async def handle_prompt(sid, data):
     print("Received prompt:", data)
-    response = await process_prompt(data["prompt"], data["student_code"])
+
+    # Extract required fields from client data
+    prompt = data["prompt"]
+    student_code = data["student_code"]
+    first_name = data.get("first_name", "Unknown")  # fallback to Unknown if not provided
+
+    session_code = sid  # Use Socket.IO session ID as the session_code
+
+    response = await process_prompt(prompt, student_code, first_name, session_code)
     await sio.emit("model_response", {"response": response}, to=sid)

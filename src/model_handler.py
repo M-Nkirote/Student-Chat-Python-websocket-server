@@ -1,5 +1,6 @@
 import ollama
 import asyncio
+from clickhouse_client import insert_chat_message
 
 
 def _blocking_ollama_chat(prompt: str):
@@ -18,7 +19,15 @@ def _blocking_ollama_chat(prompt: str):
     )
 
 
-async def process_prompt(prompt: str, student_code: str):
+async def process_prompt(prompt: str, student_code: str, first_name: str, session_code: str):
+    # Insert student prompt to DB
+    insert_chat_message(student_code, first_name, session_code, "student", prompt)
+
     loop = asyncio.get_event_loop()
     response = await loop.run_in_executor(None, _blocking_ollama_chat, prompt)
-    return f"{response['message']['content'].strip()}"
+    model_response = response['message']['content'].strip()
+
+    # Insert model response to DB
+    insert_chat_message(student_code, first_name, session_code, "model", model_response)
+
+    return model_response
