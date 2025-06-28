@@ -22,12 +22,10 @@ async def disconnect(sid):
 async def handle_prompt(sid, data):
     print("Received prompt:", data)
 
-    # Extract required fields from client data
     prompt = data["prompt"]
     student_code = data["student_code"]
-    first_name = data.get("first_name", "Unknown")  # fallback to Unknown if not provided
-
-    session_code = sid  # Use Socket.IO session ID as the session_code
+    session_code = data["session_id"]
+    first_name = data.get("first_name", "Unknown")
 
     response = await process_prompt(prompt, student_code, first_name, session_code)
     await sio.emit("model_response", {"response": response}, to=sid)
