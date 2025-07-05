@@ -1,6 +1,6 @@
 # ${\textsf{\color{#C25A7C}🤖 Simple Student Chat Backend - Python WebSocket Server}}$ 
 
-(Real-time AI-powered chat server built with FastAPI + Socket.IO to support personalized conversations using Ollama (Llama 3).)
+${\textsf{\color{#FFC0CB}(Real-time AI-powered chat server built with FastAPI + Socket.IO to support personalized conversations using Ollama (Llama 3).)}}$
 
 The Student Chat Backend is the server-side component of a real-time educational chatbot system. It handles socket connections from the frontend client, routes user prompts to an AI model (via Ollama (locally installed)) and logs detailed chats to ClickHouse.
 
